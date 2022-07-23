@@ -2,5 +2,5 @@
 
 OpenCV and Deep Learning are employed in extracting a sudoku puzzle from a video stream of a puzzle book and completing it; the main solver is programmed in Python.
 
-[x] Implement sudoku solver with hardcoded puzzles
-[ ] Employ deep learning to extract sudoku puzzle from video stream
+- [x] Implement sudoku solver with hardcoded puzzles
+- [ ] Employ deep learning to extract sudoku puzzle from video stream
