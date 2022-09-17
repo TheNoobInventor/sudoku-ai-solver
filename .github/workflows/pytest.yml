@@ -1,6 +1,6 @@
 # Install Python dependences needed to run tests with pytest. It supports a variety of Python versions
 
-name: Pytest
+name: sudoku pytest
 
 on:
   push:
