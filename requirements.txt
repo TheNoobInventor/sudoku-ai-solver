@@ -1,0 +1,8 @@
+numpy
+pytest
+tensorflow
+scikit-image
+imutils
+matplotlib
+jupyter
+jupyterlab
