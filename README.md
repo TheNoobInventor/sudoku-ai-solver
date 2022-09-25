@@ -1,4 +1,4 @@
-![Pytest workflow](https://github.com/TheNoobInventor/sudoku-ai-solver/actions/workflows/.github/workflows/pytest.yml/badge.svg) ![Mkdocs workflow](https://github.com/TheNoobInventor/sudoku-ai-solver/actions/workflows/.github/workflows/docs.yml/badge.svg)
+![Pytest workflow](https://github.com/TheNoobInventor/sudoku-ai-solver/actions/workflows/.github/workflows/pytest.yml/badge.svg) &ensp; ![Mkdocs workflow](https://github.com/TheNoobInventor/sudoku-ai-solver/actions/workflows/.github/workflows/docs.yml/badge.svg)
 # Sudoku AI Solver
 
 <p align='center'>
