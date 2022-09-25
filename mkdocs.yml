@@ -1,5 +1,5 @@
 site_name: Sudoku AI Solver
-site_url: ''
+site_url: 'https://TheNoobInventor.github.io/sudoku-ai-solver/'
 use_directory_urls: False
 
 theme:
@@ -21,8 +21,8 @@ theme:
     - navigation.sections
     - navigation.top
     - toc.integrate
-repo_url: https://github.com/sample/sample-repo
-repo_name: example/example-repo
+repo_url: https://github.com/TheNoobInventor/sudoku-ai-solver
+repo_name: TheNoobInventor/sudoku-ai-solver
 plugins:
   - search:
       lang: en
