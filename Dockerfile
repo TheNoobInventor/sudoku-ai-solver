@@ -60,3 +60,5 @@ USER $USERNAME
 ENTRYPOINT [ "jupyter", "lab", "--ip=0.0.0.0", "--port=8890", "--allow-root" , "--no-browser"]
 
 EXPOSE 8890
+
+# Format the build tools install section when done with docs and all

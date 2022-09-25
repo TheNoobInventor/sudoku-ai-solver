@@ -1,0 +1,28 @@
+site_name: Sudoku AI Solver
+site_url: ''
+use_directory_urls: False
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo 
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - toc.integrate
+repo_url: https://github.com/sample/sample-repo
+repo_name: example/example-repo
+plugins:
+  - search:
+      lang: en
