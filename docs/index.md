@@ -35,28 +35,47 @@ The packages, libraries and frameworks used in this project are listed below:
 - [Imutils](https://pypi.org/project/imutils/) - Python package used for basic image processing operations.
 - [Pytest](https://docs.pytest.org/en/7.1.x/) - Python testing framework used to write tests for applications and libraries.
 
-Python is one of the main prerequisites and can be downloaded from [here](https://www.python.org/downloads/). Pip, the python package manager, is used to install the python packages in the list above; pip and can be installed [here](https://pip.pypa.io/en/stable/installation/). Afterwards, the python packages are installed by executing this command in a terminal:
+Python is one of the main prerequisites and can be downloaded from [here](https://www.python.org/downloads/). Pip, the python package manager, is used to install the python packages in the list above -- pip can be installed from [here](https://pip.pypa.io/en/stable/installation/). Afterwards, the python packages are installed by executing this command in a terminal:
 
 ```
 pip install numpy matplotlib imutils jupyter jupyterlab scikit-image tensorflow pytest
 ```
+From Tensorflow 2.0+ Keras comes with it
 
+OpenCV installed [separately](https://docs.opencv.org/4.x/da/df6/tutorial_py_table_of_contents_setup.html)
+
+Can we squeeze in docker container talk here and the requirements.txt? So that they know what is down the line
+
+Link back to the pyimagesearch for the guidance in this process
+The steps outlined here will be expanded upon in the subsequent sections.
 
 ### Load input image and extract sudoku puzzle
+Software used
 
+Software, packages used, their uses, how to install them etc
+
+Reference the jupyter notebook
 
 ### Step 3
 
 
 ### Step 4
-model reference: https://becominghuman.ai/image-processing-sudokuai-opencv-45380715a629
 
+Model stuff. Make it as brief as possible. Jupyter notebook included if you want to train it yourself. Mention the caveats about how the model behaves, image quality etc. Check notes on Standard Notes
+
+model reference: https://becominghuman.ai/image-processing-sudokuai-opencv-45380715a629
 
 ### Step 5
 
+Sudoku solver
 
-### Step 6 
+Backtracking and Recursion, explain with diagram
 
+Pytest what we checked for and reasons why , Continuous Integration or is it development? GitHub Action
+
+Pagination?
+
+### Step 6
 
 ## Docker Image Build
 requirements.txt. Installs the packages needed. 
@@ -65,14 +84,12 @@ requirements.txt. Installs the packages needed.
 docker pull thenoobinventor/sudoku-ai-solver:latest
 ```
 
-## Video demonstration
 
 ## Observations
 
 
 ## Future work/suggestions
 Live stream video solver
-
 
 ## References
 
