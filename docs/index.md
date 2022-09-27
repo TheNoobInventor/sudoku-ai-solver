@@ -1,43 +1,86 @@
 # Sudoku AI Solver
 
-In this project, a Sudoku Artificial Intelligence (AI) puzzle solver is built using python, OpenCV, Deep Learning and OCR (Optical Character Recognition) methods to solve puzzles obtained from images. The steps needed to build this solver are outlined in the following flow chart (adapted from [Pyimagesearch](https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/)).
+In this project, a Sudoku Artificial Intelligence (AI) puzzle solver is built using python, OpenCV, Deep Learning (DL) and OCR (Optical Character Recognition) methods to solve puzzles obtained from images. The steps required to implement the solver will be outlined after a brief overview of Sudoku puzzles.
 
-(to be completed)
+(Work in progress)
 
-[Image credit](https://aakashjhawar.medium.com/sudoku-solver-using-opencv-and-dl-part-1-490f08701179)
+## Sudoku
+Sudoku is logic-based puzzle where the objective is to fill up a 9 x 9 grid with numbers from 1-9 in each row, each column and each mini 3 x 3 grid in such a way that each number does not appear more than once in a row, column or mini grid. Each puzzle contains prefilled numbers with the empty spaces are to be logically filled in with the Sudoku rules in mind. An example of a typical Sudoku puzzle is shown [below](https://aakashjhawar.medium.com/sudoku-solver-using-opencv-and-dl-part-1-490f08701179).
+
+<p align='center'>
+    <img src='../sudoku_images/sudoku2.jpg' width=400>
+</p>
+
+## Sudoku AI Solver Steps
+
+The steps needed to build the Sudoku AI solver are outlined in the following flow chart (adapted from [Pyimagesearch](https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/)).
+
+<p align='center'>
+    <img src='images/sudoku_ai_steps.jpg' width=800>
+</p>
+
+The Sudoku AI solver starts out by accepting an input image containing a sudoku puzzle. Next, OpenCV is applied to locate and extract the sudoku board from the image. After this, each cell of the board is located then checked if there is a digit in each cell or not. If there is a digit present, a Deep Learning trained Optical Character Recognition (OCR) model is employed to identify it. At this point, given the cell locations and digits, a python script is run to solve the sudoku puzzle. Finally, the solved puzzle is displayed as an image to the user.
+
+Most of these steps can be accomplished using OpenCV, however, training the OCR model involves using the Keras and Tensorflow libraries. 
+
+The packages, libraries and frameworks used in this project are listed below:
+
+- [OpenCV](https://opencv.org/) - Open source library that provides real-time computer vision tools, functions and hardware.
+- [JupyterLab](https://jupyter.org/) - Web-based interactive development environment for notebooks, code and data.
+- [Tensorflow](https://www.tensorflow.org/) - An Artificial Intelligence library that is used to build, train and deploy Machine Learning and Deep Learning models.
+- [Keras](https://keras.io/) - API built on top of Tensorflow 2
+- [Numpy](https://numpy.org/doc/stable/index.html) - A Python library used for multidimensional array manipulation and calculations, basic linear algebra, statistical operations and more. It is utilized by OpenCV for array operations. 
+- [Matplotlib](https://matplotlib.org/) - Library used for visualizations in Python.
+- [Scikit](https://scikit-image.org/) - Library used for image processing in Python.
+- [Imutils](https://pypi.org/project/imutils/) - Python package used for basic image processing operations.
+- [Pytest](https://docs.pytest.org/en/7.1.x/) - Python testing framework used to write tests for applications and libraries.
+
+Python is one of the main prerequisites and can be downloaded from [here](https://www.python.org/downloads/). Pip, the python package manager, is used to install the python packages in the list above; pip and can be installed [here](https://pip.pypa.io/en/stable/installation/). Afterwards, the python packages are installed by executing this command in a terminal:
+
+```
+pip install numpy matplotlib imutils jupyter jupyterlab scikit-image tensorflow pytest
+```
 
 
-## Hardware
+### Load input image and extract sudoku puzzle
 
-### Components
-Tools and sensors used 
 
-### Project assembly
-Assembly steps 
-Pictures of the assembled project
+### Step 3
 
-## Software
 
-### Software architecture
-Software used
+### Step 4
+model reference: https://becominghuman.ai/image-processing-sudokuai-opencv-45380715a629
 
-### Software install
-How to download and run the code
+
+### Step 5
+
+
+### Step 6 
+
+
+## Docker Image Build
+requirements.txt. Installs the packages needed. 
+
+```
+docker pull thenoobinventor/sudoku-ai-solver:latest
+```
 
 ## Video demonstration
 
 ## Observations
 
-## Future work/suggestions
 
-## References
+## Future work/suggestions
+Live stream video solver
+
+
 ## References
 
 - [Base Sudoku Solver Code](https://www.youtube.com/watch?v=tvP_FZ-D9Ng)
 
 - [Sudoku Solver using Computer Vision and Deep Learning](https://aakashjhawar.medium.com/sudoku-solver-using-opencv-and-dl-part-1-490f08701179)
 
-- https://becominghuman.ai/image-processing-sudokuai-opencv-45380715a629 (Give her model parameter credit and more for explaining concepts)
+- [Image Processing Sudoku AI](https://becominghuman.ai/image-processing-sudokuai-opencv-45380715a629)
 
 - [OpenCV Sudoku Solver and OCR](https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/)
 
