@@ -8,7 +8,7 @@ In this project, a Sudoku Artificial Intelligence (AI) puzzle solver is built us
 Sudoku is logic-based puzzle where the objective is to fill up a 9 x 9 grid with numbers from 1-9 in each row, each column and each mini 3 x 3 grid in such a way that each number does not appear more than once in a row, column or mini grid. Each puzzle contains prefilled numbers with the empty spaces are to be logically filled in with the Sudoku rules in mind. An example of a typical Sudoku puzzle is shown [below](https://aakashjhawar.medium.com/sudoku-solver-using-opencv-and-dl-part-1-490f08701179).
 
 <p align='center'>
-    <img src='../sudoku_images/sudoku2.jpg' width=400>
+    <img src='images/sudoku2.jpg' width=400>
 </p>
 
 ## Sudoku AI Solver Steps
