@@ -5,21 +5,21 @@ In this project, a Sudoku Artificial Intelligence (AI) puzzle solver is built us
 (Work in progress)
 
 ## Sudoku
-Sudoku is logic-based puzzle where the objective is to fill up a 9 x 9 grid with numbers from 1-9 in each row, each column and each mini 3 x 3 grid in such a way that each number does not appear more than once in a row, column or mini grid. Each puzzle contains prefilled numbers with the empty spaces are to be logically filled in with the Sudoku rules in mind. An example of a typical Sudoku puzzle is shown [below](https://aakashjhawar.medium.com/sudoku-solver-using-opencv-and-dl-part-1-490f08701179).
+Sudoku is logic-based puzzle where the objective is to fill up a 9 x 9 grid with numbers from 1-9 in each row, each column and each mini 3 x 3 grid/block in such a way that each number does not appear more than once in a row, column or mini grid. Each puzzle contains prefilled numbers with the empty spaces are to be logically filled in with the Sudoku rules in mind. An example of a typical sudoku puzzle is shown below.
 
 <p align='center'>
-    <img src='images/sudoku2.jpg' width=400>
+    <img src='images/sudoku.jpg' width=400>
 </p>
 
 ## Sudoku AI Solver Steps
 
-The steps needed to build the Sudoku AI solver are outlined in the following flow chart (adapted from [Pyimagesearch](https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/)).
+The steps needed to build the sudoku AI solver are outlined in the following flow chart (adapted from [Pyimagesearch](https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/)).
 
 <p align='center'>
     <img src='images/sudoku_ai_steps.jpg' width=800>
 </p>
 
-The Sudoku AI solver starts out by accepting an input image containing a sudoku puzzle. Next, OpenCV is applied to locate and extract the sudoku board from the image. After this, each cell of the board is located then checked if there is a digit in each cell or not. If there is a digit present, a Deep Learning trained Optical Character Recognition (OCR) model is employed to identify it. At this point, given the cell locations and digits, a python script is run to solve the sudoku puzzle. Finally, the solved puzzle is displayed as an image to the user.
+The sudoku AI solver starts out by accepting an input image containing a sudoku puzzle. Next, OpenCV is applied to locate and extract the sudoku board from the image. After this, each cell of the board is located then checked if there is a digit in each cell or not. If there is a digit present, a Deep Learning trained Optical Character Recognition (OCR) model is employed to identify it. At this point, given the cell locations and digits, a python script is run to solve the sudoku puzzle. Finally, the solved puzzle is displayed as an image to the user.
 
 Most of these steps can be accomplished using OpenCV, however, training the OCR model involves using the Keras and Tensorflow libraries. The packages, libraries and frameworks used in this project are listed below:
 
@@ -49,6 +49,15 @@ Now that the project software environment has been setup, it is time to build th
 
 ### Load input image and extract sudoku puzzle
 
+The input image is loaded into the `sudoku_puzzle_extractor.ipynb` notebook as follows:
+
+```
+img = cv2.imread('sudoku_images/sudoku.jpg')
+img = imutils.resize(img, width=600)
+```
+
+The image is then resized to aid with the image processing. 
+
 
 ### Step 3
 
@@ -72,17 +81,20 @@ docker pull thenoobinventor/sudoku-ai-solver:latest
 
 ## Future work/suggestions
 Live stream video solver
+Mask solutions on original image
 
 ## References
 
 - [Base Sudoku Solver](https://www.youtube.com/watch?v=tvP_FZ-D9Ng)
 
-- [Sudoku Solver using Computer Vision and Deep Learning](https://aakashjhawar.medium.com/sudoku-solver-using-opencv-and-dl-part-1-490f08701179)
+- [Sudoku Solver using Computer Vision & Deep Learning](https://aakashjhawar.medium.com/sudoku-solver-using-opencv-and-dl-part-1-490f08701179)
 
 - [Image Processing Sudoku AI](https://becominghuman.ai/image-processing-sudokuai-opencv-45380715a629)
 
 - [OpenCV Sudoku Solver and OCR](https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/)
 
+- [Using OpenCV to solve a sudoku](https://golsteyn.com/writing/sudoku)
+  
 - [OpenCV Docs](https://docs.opencv.org/4.x/d1/dfb/intro.html)
  
 - [Understanding OpenCV getperspective transform](https://theailearner.com/tag/cv2-getperspectivetransform/)
