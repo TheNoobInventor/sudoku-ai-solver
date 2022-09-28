@@ -56,9 +56,7 @@ img = cv2.imread('sudoku_images/sudoku.jpg')
 img = imutils.resize(img, width=600)
 ```
 
-The image is then resized to aid with the image processing. 
-
-
+The image is then resized to aid with the image processing.
 ### Step 3
 
 
