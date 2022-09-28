@@ -49,16 +49,25 @@ Now that the project software environment has been setup, it is time to build th
 
 ### Load input image and extract sudoku puzzle
 
-The input image is loaded into the `sudoku_puzzle_extractor.ipynb` notebook as follows:
+The input image is loaded into the `sudoku_puzzle_extractor.ipynb` notebook in the first line below:
 
 ```
 img = cv2.imread('sudoku_images/sudoku.jpg')
 img = imutils.resize(img, width=600)
 ```
 
-The image is then resized to aid with the image processing.
+The image is then resized to aid with the image processing. The image needs to be processed before the puzzle can be extracted from it. The image processing steps are as follows:
+
+<ol>
+    <li></li>
+    <li></li>
+    <li></li>
+</ol>
+
+
 ### Step 3
 
+<!-- Display images of a few extracted digits, like was done in the pyimagesearch -->
 
 ### Step 4
 
@@ -68,6 +77,8 @@ The image is then resized to aid with the image processing.
 
 ### Step 6
 
+
+<!-- Need to circle back to introduce the main cell of the notebook, or do that here? -->
 ## Docker Image Build
 
 <!-- ```
