@@ -3,3 +3,4 @@ __pycache__
 Dockerfile
 site/
 .ipynb_checkpoints
+docs/

@@ -70,7 +70,7 @@ def test_puzzle_before_solver():
 # Test to confirm that the puzzle has an element that is not of type int
 def test_puzzle_has_a_wrong_element_type(): 
     with pytest.raises(TypeError):
-        solve_puzzle(puzzle_2)
+        solve_puzzle(puzzle_2, debug=True)
 
 # Test to confirm that the solved puzzle and the provide solution are the same
 def test_solver():
@@ -80,9 +80,9 @@ def test_solver():
 # Test to confirm that there is a duplicate in a puzzle row
 def test_duplicate_row():
     with pytest.raises(ValueError):
-        solve_puzzle(puzzle_3)
+        solve_puzzle(puzzle_3, debug=True)
 
 # Test to confirm that there is a duplicate in a puzzle block
 def test_duplicate_block():
     with pytest.raises(ValueError):
-        solve_puzzle(puzzle_4)
+        solve_puzzle(puzzle_4, debug=True)

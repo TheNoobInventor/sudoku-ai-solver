@@ -2,15 +2,16 @@
 
 # This script contains methods used to solve a sudoku puzzle.
 
-def solve_puzzle(puzzle):
+def solve_puzzle(puzzle, debug=False):
     """
     This method attempts to solve the passed in sudoku puzzle using backtracking. It returns the solved puzzle
     if it is solved and False if there is no solution.
     """
 
-    # First check if the puzzle is valid
-    if not is_puzzle_valid(puzzle):
-        return False
+    # If debug is set to True, check if puzzle is valid
+    if debug:
+        if not is_puzzle_valid(puzzle):
+            return False
 
     # Find the next empty space of the puzzle to guess in
     row, col = find_next_empty(puzzle)
@@ -84,6 +85,7 @@ def is_puzzle_valid(puzzle):
                 col_start = (c // 3) * 3 # Get starting column index for the 3x3 block to search in
 
                 for i in range(row_start, row_start+3):
+                    # block_vals = [block_vals.append(puzzle[i][j]) for j in range(col_start, col_start+3)]
                     for j in range(col_start, col_start+3):
                         block_vals.append(puzzle[i][j])
 

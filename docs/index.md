@@ -41,10 +41,14 @@ pip install numpy matplotlib imutils jupyter jupyterlab scikit-image tensorflow 
 
 Keras is automatically installed with Tensorflow. OpenCV is installed separately and can be downloaded [here](https://docs.opencv.org/4.x/da/df6/tutorial_py_table_of_contents_setup.html) with options for Windows, Fedora and Ubuntu -- Ubuntu 20.04 is the OS used for this project.
 
-The `sudoku_puzzle_extractor.ipynb` jupyter notebook in this repository is the main file used to build the sudoku AI solver. The file was based on the steps used in this [Pyimagesearch article](https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/) with modifications to the OCR model, the script that solves the extracted puzzle and more. 
+The `sudoku_puzzle_extractor.ipynb` jupyter notebook in this repository is the main file used to build the sudoku AI solver. The file was based on the steps used in this [Pyimagesearch article](https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/) with modifications to the functions in the jupyter notebook, the OCR model, the script that solves the extracted puzzle and more. 
 
+A docker container, based on a custom image built on ubuntu 20.04, which mirrors the project repository with all the necessary packages, libraries and frameworks, can also be used to run the main jupyter notebook to solve image extracted sudoku puzzles. The docker build is detailed in subsequent subsection.
+
+Now that the project software environment has been setup, it is time to build the Sudoku AI Solver.
 
 ### Load input image and extract sudoku puzzle
+
 
 ### Step 3
 
@@ -59,9 +63,9 @@ The `sudoku_puzzle_extractor.ipynb` jupyter notebook in this repository is the m
 
 ## Docker Image Build
 
-```
+<!-- ```
 docker pull thenoobinventor/sudoku-ai-solver:latest
-```
+``` -->
 
 ## Observations
 
