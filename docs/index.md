@@ -39,11 +39,11 @@ Python is one of the main prerequisites for the project and can be downloaded fr
 pip install numpy matplotlib imutils jupyter jupyterlab scikit-image tensorflow pytest
 ```
 
-Keras is automatically installed with Tensorflow. OpenCV is installed separately and can be downloaded [here](https://docs.opencv.org/4.x/da/df6/tutorial_py_table_of_contents_setup.html) with options for Windows, Fedora and Ubuntu -- Ubuntu 20.04 is the OS used for this project.
+Keras is automatically installed with Tensorflow. OpenCV is installed separately and can be downloaded [here](https://docs.opencv.org/4.x/da/df6/tutorial_py_table_of_contents_setup.html) with options for Windows, Fedora and Ubuntu operating systems -- Ubuntu 20.04 is used for this project.
 
 The `sudoku_puzzle_extractor.ipynb` jupyter notebook in this repository is the main file used to build the sudoku AI solver. The file was based on the steps used in this [Pyimagesearch article](https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/) with modifications to the functions in the jupyter notebook, the OCR model, the script that solves the extracted puzzle and more. 
 
-A docker container, based on a custom image built on ubuntu 20.04, which mirrors the project repository with all the necessary packages, libraries and frameworks, can also be used to run the main jupyter notebook to solve image extracted sudoku puzzles. The docker build is detailed in subsequent subsection.
+A docker container, based on a custom image built on Ubuntu 20.04, which mirrors the project repository with all the necessary packages, libraries and frameworks, can also be used to run the main jupyter notebook to solve image extracted sudoku puzzles. The docker build is detailed in subsequent subsection.
 
 Now that the project software environment has been setup, it is time to build the Sudoku AI Solver.
 
@@ -56,41 +56,85 @@ img = cv2.imread('sudoku_images/sudoku.jpg')
 img = imutils.resize(img, width=600)
 ```
 
-The image is then resized to aid with the image processing. The image needs to be processed before the puzzle can be extracted from it. The image processing steps are as follows:
+In the second line, the image is resized to aid with image processing. The image needs to be processed before the puzzle can be extracted from it. The image is processed in the following steps and these are found in the `find_puzzle(img)` function in the notebook:
 
-<ol>
-    <li></li>
-    <li></li>
-    <li></li>
-</ol>
+- <strong>Convert the resized image to grayscale</strong>
+ 
+    This is achieved using the following OpenCV function:
 
+    ```
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    ```
 
-### Step 3
+    This is a requirement for the other processing steps to work.
+
+- <strong>Filter noise from the image</strong>
+  
+    The [Gaussian Blur](https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html#gaabe8c836e97159a9193fb0b11ac52cf1) is used to filter noise from the image. The general form of the `GaussianBlur()` function syntax is as follows:
+
+    <p align='center'><big>GaussianBlur(src, dst, ksize, sigmaX, sigmaY)</big></p>
+
+    - <strong>src</strong> - Input image
+    - <strong>dst</strong> - Output image of same size and type as src.
+    - <strong>ksize</strong> - Gaussian kernel size[height width ]. The kernel is a group of pixels that move along the src image pixel being worked on by the filter. Height and width must be odd numbers and can have different values. If ksize is set to [0,0], then ksize is computed from sigma value.
+    - <strong>sigmaX</strong> - Kernel standard derivation along X-axis.(horizontal direction).
+    - <strong>sigmaY</strong> - Kernel standard derivation along Y-axis (vertical direction). If sigmaY = 0 then sigmaX value is taken for sigmaY.
+
+    In the notebook, GaussianBlur is applied on the gray image with the following kernel size and sigmaX value:
+
+    ```
+    blurred = cv2.GaussianBlur(gray, (7,7), 3)
+    ```
+    More information on GaussianBlur and other OpenCV filtering and blurring techniques can be read about [here](https://datacarpentry.org/image-processing/06-blurring/) and [here](https://www.javatpoint.com/opencv-blur).
+
+- <strong>Image thresholding</strong>
+
+    The next image process step is <strong><em>thresholding</em></strong>. In attempting to find the puzzle from an image, being able to detect the edges and shapes within the image are important. Thresholding is a method of segmenting an image into different regions or contours. 
+    
+    A binary threshold is applied on the blurred grayscale image to convert it to consist of only two values, 0 or 255 - black or white respectively.  
+
+   
+### Localize each cell
+
+Lorem ipsum
 
 <!-- Display images of a few extracted digits, like was done in the pyimagesearch -->
 
 ### Step 4
 
+Lorem ipsum
 
 ### Step 5
 
+Lorem ipsum
 
 ### Step 6
+<p align='center'>
+    <img src='images/extracted_gray.jpg' width=400>
+</p>
 
+Lorem ipsum
+
+<p align='center'>
+    <img src='images/solved_puzzle.jpg' width=400>
+</p>
 
 <!-- Need to circle back to introduce the main cell of the notebook, or do that here? -->
 ## Docker Image Build
+Lorem ipsum
 
 <!-- ```
 docker pull thenoobinventor/sudoku-ai-solver:latest
 ``` -->
 
 ## Observations
+Lorem ipsum
 
 
 ## Future work/suggestions
-Live stream video solver
-Mask solutions on original image
+- Live stream video solver
+
+- Mask solutions on original skewed image
 
 ## References
 
