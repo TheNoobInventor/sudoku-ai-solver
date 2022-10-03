@@ -43,7 +43,7 @@ Keras is automatically installed with Tensorflow. OpenCV is installed separately
 
 The `sudoku_puzzle_extractor.ipynb` jupyter notebook in this repository is the main file used to build the sudoku AI solver. The file was based on the steps used in this [Pyimagesearch article](https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/) with modifications to the functions in the jupyter notebook, the OCR model, the script that solves the extracted puzzle and more. 
 
-A docker container, based on a custom image built on Ubuntu 20.04, which mirrors the project repository with all the necessary packages, libraries and frameworks, can also be used to run the main jupyter notebook to solve image extracted sudoku puzzles. The docker build is detailed in subsequent subsection.
+A docker container, based on a custom image built on Ubuntu 20.04, which mirrors the project repository with all the necessary packages, libraries and frameworks, can also be used to run the main jupyter notebook to solve image extracted sudoku puzzles. The docker build is detailed in a subsequent subsection.
 
 Now that the project software environment has been setup, it is time to build the Sudoku AI Solver.
 
@@ -70,11 +70,13 @@ In the second line, the image is resized to aid with image processing. The image
 
 - <strong>Filter noise from the image</strong>
   
-    The [Gaussian Blur](https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html#gaabe8c836e97159a9193fb0b11ac52cf1) is used to filter noise from the image. The general form of the `GaussianBlur()` function syntax is as follows:
+    The [Gaussian Blur](https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html#gaabe8c836e97159a9193fb0b11ac52cf1) is used to filter noise from the image. The general form of the `cv2.GaussianBlur()` function syntax is as follows:
 
     <p align='center'><big>GaussianBlur(src, dst, ksize, sigmaX, sigmaY)</big></p>
+    
+    Where,
 
-    - <strong>src</strong> - Input image
+    - <strong>src</strong> - Input image.
     - <strong>dst</strong> - Output image of same size and type as src.
     - <strong>ksize</strong> - Gaussian kernel size[height width ]. The kernel is a group of pixels that move along the src image pixel being worked on by the filter. Height and width must be odd numbers and can have different values. If ksize is set to [0,0], then ksize is computed from sigma value.
     - <strong>sigmaX</strong> - Kernel standard derivation along X-axis.(horizontal direction).
@@ -85,15 +87,105 @@ In the second line, the image is resized to aid with image processing. The image
     ```
     blurred = cv2.GaussianBlur(gray, (7,7), 3)
     ```
+    
     More information on GaussianBlur and other OpenCV filtering and blurring techniques can be read about [here](https://datacarpentry.org/image-processing/06-blurring/) and [here](https://www.javatpoint.com/opencv-blur).
 
 - <strong>Image thresholding</strong>
 
     The next image process step is <strong><em>thresholding</em></strong>. In attempting to find the puzzle from an image, being able to detect the edges and shapes within the image are important. Thresholding is a method of segmenting an image into different regions or contours. 
     
-    A binary threshold is applied on the blurred grayscale image to convert it to consist of only two values, 0 or 255 - black or white respectively.  
+    A binary threshold is applied on the blurred grayscale image to convert it to consist of only two values, 0 or 255 - black or white respectively. The `cv2.adaptiveThreshold()` function was used to achieve this and it has the following [general syntax]((https://docs.opencv.org/4.x/d7/d1b/group__imgproc__misc.html#ga72b913f352e4a1b1b397736707afcde3)):
+    <br />  
 
-   
+    <p align='center'><big>adaptiveThreshold(src, dst, maxValue, adaptiveMethod, thresholdType, blockSize, C)</big></p>
+
+    Where,
+
+    - <strong>src</strong> - Input image.
+    - <strong>dst</strong> - Output image of same size and type as src.
+    - <strong>maxValue</strong> - Non-zero value assigned to the pixels for which the condition is satisifed.
+    - <strong>adaptiveMethod</strong> - Adaptive thresholding algorithm to use. There are two [adaptiveThreshold algorithms](https://docs.opencv.org/4.x/d7/d1b/group__imgproc__misc.html#gaa42a3e6ef26247da787bf34030ed772c): ADAPTIVE_THRESH_MEAN_C and ADAPTIVE_THRESH_GAUSSIAN_C.
+    - <strong>thresholdType</strong> - Thresholding type that must be either THRESHOLD_BINARY or THRESHOLD_BINARY_INV.
+    - <strong>blockSize</strong> - Size of a pixel neighborhood that is used to calculate a threshold value for the pixel: 3, 5, 7 and so on.
+    - <strong>C</strong> - Constant subtracted from the mean or weighted mean. It is normally positive but may be zero or negative as well. 
+    
+
+    The following command in the notebook applies an adaptiveThreshold to the blurred grascale image:
+
+    ```
+    thresh = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
+                                    cv2.THRESH_BINARY_INV, 11, 2)
+    ```
+
+    Here the maxValue is set to 255, any pixel value in the image above 255 is set to 0, otherwise it is set to 255. This happens because the thresholdType is set to THRESHOLD_BINARY_INV, where INV stands for Inverse. The thresholded image is shown below.
+
+    <p align='center'>
+        <img src='images/thresholded.jpg' width=400>
+    </p>
+
+The next steps are to find the contours in the thresholded image and sort them in descending order to locate the outline of the sudoku puzzle. 
+
+As the name suggests, the `cv2.findContours()` function is used to retrieve the contours from the thresholded image and its use is shown in the code block below:
+
+```
+# Find contours in the thresholded image and sort them by size in descending order
+cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+cnts = imutils.grab_contours(cnts)
+cnts = sorted(cnts, key=cv2.contourArea, reverse=True)
+```
+
+A copy of the thresholded image is passed into the function with the parameters: CHAIN_APPROX_SIMPLE, a contour approximation method which encodes a rectangular contuor with 4 points, and RETR_EXTERNAL, a contour retrieval method which retrieves only the extreme outer contours. Other options for contour approximation and retrieval modes are found [here](https://docs.opencv.org/4.x/d3/dc0/group__imgproc__shape.html#ga4303f45752694956374734a03c54d5ff) and [here](https://docs.opencv.org/4.x/d3/dc0/group__imgproc__shape.html#ga819779b9857cc2f8601e6526a3a5bc71) respectively. 
+
+The `imutils` package function, `grab_contours()`, return the contours obtained in the previous line of code and these contours are then sorted by area in reverse order. Two OpenCV functions, `cv2.arcLength()` and `cv2.approxPolyDP()`, are used to determine the puzzle outline. The applications of these functions are shown in the code blocks below:
+
+``` 
+# Initialize a contour that corresponds to the puzzle outline
+puzzle_cnt = None
+
+# Loop over the contours
+for c in cnts:
+    # Approximate the coutour
+    peri = cv2.arcLength(c, True) 
+    approx = cv2.approxPolyDP(c, 0.02 * peri, True)
+
+    # If the approximated contour has 4 points, then it is assumed that 
+    # this contour is the puzzle outline
+    if len(approx) == 4:
+        puzzle_cnt = approx
+        break
+```
+
+Firstly, the puzzle outline variable, `puzzle_cnt`, is initialized. Next the contours are looped over to find the perimeter of the contour with `cv2.arcLength()` while `cv2.approxPolyDP()` returns an approximated contour of the passed in contour. The figure <strong>0.02</strong> specifies the maximum variance between the original contour and the perimeter of the approximation, that is, the appromixation is 2% of the original contour. If the approximated contour has <strong>4</strong> points, it is assumed that this is the puzzle contour.
+
+The obtained puzzle outline is drawn on the copy of the original image, using the `cv2.drawContours()` function, in the following lines of code:
+
+```
+puzzle_outline = img.copy()
+cv2.drawContours(puzzle_outline, [puzzle_cnt], -1, (0, 255, 0), 3)
+```
+
+The contour index is <strong>-1</strong> and a negative value indicates that all contours are drawn, <strong>(0, 255, 0)</strong> is the line color (green in this case) and <strong>3</strong> is the line thickness. More information on `cv2.drawContours()` is available [here](https://docs.opencv.org/4.x/d6/d6e/group__imgproc__draw.html#ga746c0625f1781f1ffc9056259103edbc).
+
+The puzzle outline is shown in the image below.
+
+<p align='center'>
+    <img src='images/puzzle_outline.jpg' width=400>
+</p>
+
+Before moving on to locating and extracting digits in the puzzle, it is necessary to deskew the puzzle image, to a top-down bird's eye view, to make it easier to determine rows, columns and cells of the sudoku puzzle. This operation is achieved by using the `four_point_transform()` function from the `imutils` package on both color and grayscale puzzle images:
+
+```
+color_puzzle = four_point_transform(img, puzzle_cnt.reshape(4,2)) 
+gray_puzzle = four_point_transform(gray, puzzle_cnt.reshape(4,2))  
+```
+The method `reshape(4,2)` reshapes the array of the puzzle contour to have a shape of <strong>(4, 2)</strong>, the required format for the `four_point_transform()` function. The image below shows the grayscale version after applying the transform. 
+
+<p align='center'>
+    <img src='images/extracted_gray.jpg' width=400>
+</p>
+
+The `find_puzzle()` function returns the transformed images `color_puzzle` and `gray_puzzle` that will be used in subsequent steps in the sudoku AI solver. The next step in the solver is to localize each cell in the puzzle.
+
 ### Localize each cell
 
 Lorem ipsum
@@ -109,9 +201,6 @@ Lorem ipsum
 Lorem ipsum
 
 ### Step 6
-<p align='center'>
-    <img src='images/extracted_gray.jpg' width=400>
-</p>
 
 Lorem ipsum
 
