@@ -1,6 +1,6 @@
 # Publish documentation using mkdocs via GitHub pages
 
-name: Documentation
+name: documentation
 on:
   push:
     branches:

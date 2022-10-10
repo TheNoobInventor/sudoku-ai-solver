@@ -29,7 +29,8 @@ Most of these steps can be accomplished using OpenCV, however, training the OCR 
 - [Keras](https://keras.io/) - A Deep Learning library that provides an interface for Tensorflow.
 - [Numpy](https://numpy.org/doc/stable/index.html) - A Python library used for multidimensional array manipulation and calculations, basic linear algebra, statistical operations and more. It is utilized by OpenCV for array operations. 
 - [Matplotlib](https://matplotlib.org/) - Library used for visualizations in Python.
-- [Scikit](https://scikit-image.org/) - Library used for image processing in Python.
+- [Scikit-image](https://scikit-image.org/) - Library used for image processing in Python.
+- [Scikit-learn](https://scikit-learn.org/stable/) - Library used for Machine Learning in Python.
 - [Imutils](https://pypi.org/project/imutils/) - Python package used for basic image processing operations.
 - [Pytest](https://docs.pytest.org/en/7.1.x/) - Python testing framework used to write tests for applications and libraries.
 
@@ -184,21 +185,50 @@ The method `reshape(4,2)` reshapes the array of the puzzle contour to have a sha
     <img src='images/extracted_gray.jpg' width=400>
 </p>
 
-The `find_puzzle()` function returns the transformed images `color_puzzle` and `gray_puzzle` that will be used in subsequent steps in the sudoku AI solver. The next step in the solver is to localize each cell in the puzzle.
+The `find_puzzle()` function returns the transformed images `color_puzzle` and `gray_puzzle` that will be used in subsequent steps in the sudoku AI solver as shown in this line of the main program cell in the notebook: 
+
+```
+# Find puzzle in the image. Set debug to False to disable displaying image processing steps.
+color_puzzle, gray_puzzle = find_puzzle(img, debug=True)
+```
+
+The next step in the solver is to localize each cell in the puzzle.
 
 ### Localize each cell
 
-Lorem ipsum
+In order to localize each cell, the sudoku board needs to be initialized, split into individual cells and then the (x-y) coordinate location of each cell is generated. The following lines in the main program cell achieve this:
 
-<!-- Display images of a few extracted digits, like was done in the pyimagesearch -->
+```
+# Initialize sudoku board
+unsolved_board = np.zeros((9,9), dtype='int')
+
+# Sudoku is a 9x9 grid (81 individual cells), location of each cell can be inferred by
+# dividing the gray_puzzle image into a 9x9 grid
+step_x = gray_puzzle.shape[1] // 9
+step_y = gray_puzzle.shape[0] // 9
+
+# Load model to detect digits
+model = load_model('model_files/digit_classifier_model.h5')
+
+# List of the (x-y) coordinate location of each cell
+cell_locs = generate_cell_locations(step_x, step_y)
+```
+The OCR model is also loaded as it will be employed by the `classify_digit()` function called from `generate_cell_locations()` to classify digits; this process will be elaborated on later in this subsection. 
 
 ### Step 4
 
 Lorem ipsum
 
+<!-- 60,000 28x28 images mnist dataset -->
+
+<!-- Explain one hot encoding -->
+<!-- necessary to talk about? model.metrics_names -->
+
 ### Step 5
 
 Lorem ipsum
+
+<!-- Try to keep this as small as possible as the main solver is well commented. Consider using a flow chart to show the solver process -->
 
 ### Step 6
 
@@ -210,17 +240,28 @@ Lorem ipsum
 
 <!-- Need to circle back to introduce the main cell of the notebook, or do that here? -->
 ## Docker Image Build
+
 Lorem ipsum
 
 <!-- ```
 docker pull thenoobinventor/sudoku-ai-solver:latest
 ``` -->
 
+<!-- Running pytest in docker container -->
+
+<!-- Settings and go into dark mode -->
+
+<!-- walkthrough of how to run the container -->
+
+<!-- How you can train your own model and the issues with image quality etc -->
+
 ## Observations
+
 Lorem ipsum
 
 
 ## Future work/suggestions
+
 - Live stream video solver
 
 - Mask solutions on original skewed image

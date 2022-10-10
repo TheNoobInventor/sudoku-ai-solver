@@ -4,3 +4,5 @@ Dockerfile
 site/
 .ipynb_checkpoints
 docs/
+mkdocs.yml
+README.md
