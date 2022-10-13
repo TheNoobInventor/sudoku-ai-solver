@@ -13,14 +13,12 @@ First pull the image:
 
 ```
 docker pull thenoobinventor/sudoku-ai-solver:latest
-
 ```
 
 Then run a container based on the image:
 
 ```
 docker run -it --rm -p 8890:8890 --name container_name sudoku-ai-solver
-
 ```
 
 The documentation for this project can be found [here](https://TheNoobInventor.github.io/sudoku-ai-solver/).
