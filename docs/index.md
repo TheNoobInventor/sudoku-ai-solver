@@ -188,7 +188,8 @@ The method `reshape(4,2)` reshapes the array of the puzzle contour to have a sha
 The `find_puzzle()` function returns the transformed images `color_puzzle` and `gray_puzzle` that will be used in subsequent steps in the sudoku AI solver as shown in this line of the main program cell in the notebook: 
 
 ```
-# Find puzzle in the image. Set debug to False to disable displaying image processing steps.
+# Find puzzle in the image. Set debug to False to disable displaying image 
+# processing steps.
 color_puzzle, gray_puzzle = find_puzzle(img, debug=True)
 ```
 
@@ -213,9 +214,120 @@ model = load_model('model_files/digit_classifier_model.h5')
 # List of the (x-y) coordinate location of each cell
 cell_locs = generate_cell_locations(step_x, step_y)
 ```
-The OCR model is also loaded as it will be employed by the `classify_digit()` function called from `generate_cell_locations()` to classify digits; this process will be elaborated on later in this subsection. 
+The OCR model is also loaded as it will be employed by the `classify_digit()` function called from the `generate_cell_locations()` function to classify digits; this process will be elaborated on later in this subsection. The steps of the `generate_cell_locations()` function are shown in the following code block:
 
-### Step 4
+```
+# Initialize a list to store (x,y) coordinates of each cell location
+cell_locs = []
+
+# Loop over the grid lcoations
+for y in range(9):
+    # Initialize the current list of cell locations
+    row = []
+
+    for x in range(9):
+        # Compute the starting and ending (x,y) coordinates of the current cell
+        start_x = x * step_x
+        start_y = y * step_y
+        end_x = (x + 1) * step_x
+        end_y = (y + 1) * step_y
+
+        # Add the (x,y) coordinates to the cell locations list
+        row.append((start_x, start_y, end_x, end_y))
+
+        # Crop the cell from the gray_puzzle transformed image and then extract
+        # the digit from the cell
+        cell = gray_puzzle[start_y:end_y, start_x:end_x]
+        digit = extract_digit(cell)
+
+        # Confirm that the digit is not empty
+        if digit is not None:
+            classify_digit(digit, x, y)
+
+    # Add the row to the cell locations
+    cell_locs.append(row)
+
+return cell_locs
+```
+
+The function starts by initializing a list, `cell_locs`, to store the (x, y) coordinates of each cell location. It then iterates over each grid location of the sudoku board, row by row, and appends the `start_x, start_y, end_x, end_y` values of each cell in a list. 
+
+The figure below illustrates a typical cell with the start and end (x, y) coordinates.
+
+<p align='center'>
+    <img src='images/sudoku_cell.jpg' width=400>
+</p>
+
+For each iteration, the `generate_cell_locations()` function calls the `extract_digit()` function to determine if there is a digit present in the current cell. This process of digit extraction is shown in the code block below.
+
+```
+# Apply automatic thresholding to the cell and then clear any connected borders 
+# that touch the border of the cell
+thresh = cv2.threshold(cell, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+thresh = clear_border(thresh)
+
+# Find contours in the thresholded cell
+cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+cnts = imutils.grab_contours(cnts)
+
+# If no contours were found then this is an empty cell
+if len(cnts)==0:
+    return None
+
+# Otherwise find the largest contour in the cell and create a mask for 
+# the contour
+c = max(cnts, key=cv2.contourArea)
+mask = np.zeros(thresh.shape, dtype="uint8")
+cv2.drawContours(mask, [c], -1, 255, -1)
+
+# Compute the perecentage of masked pixels relative to the total area of the image
+(h, w) = thresh.shape
+percent_filled = cv2.countNonZero(mask) / float(w * h)
+
+# If less than 3% of the mask is filled then we are looking at noise and 
+# can safely ignore the contour
+if percent_filled < 0.03:
+    return None
+
+# Apply the mask to the thresholded cell
+digit = cv2.bitwise_and(thresh, thresh, mask=mask) 
+
+return digit
+```
+
+Similar to finding the outline of the sudoku puzzle, thresholding techniques are also applied here in extracting the digit. The method `clear_border()` from the library `skimage.segmentation` is used to clear any connected borders touching a respective cell border. The next step is to find contours in the thresholded cell, if no contours are found, `None` is returned. If there are contours present in `cnts`, the largest contour by pixel area is found and a mask is created for it. 
+
+Dividing the pixel area of the mask by the area of the cell itself gives the `percentFilled` value, that is, how much the cell is "filled up" with white pixels. This percentage is used to confirm if the contour is noisy or if contains a digit; any percentage less than 3% was assumed to be only noise. 
+
+If the cell is not noisy, the mask is applied to the thresholded image and the digit is returned. As an example, the extracted cell of the bottom left hand corner from the puzzle `sudoku.jpg` is shown below.
+
+<p align='center'>
+    <img src='images/digit.jpg' width=200>
+</p>
+
+The returned digit is then classified using the `classify_digit()` function with the steps shown in the following code block.
+
+```
+# Resize the digit to 28x28 pixels and prepare it classification. 
+# 28x28 is the size of images in the MNIST dataset
+roi = cv2.resize(digit, (28, 28))
+roi = roi.astype("float")/255.0
+roi = img_to_array(roi)
+roi = np.expand_dims(roi, axis=0)
+
+# Classify the digit and update the sudoku board with the prediction
+pred = model.predict(roi, verbose=0).argmax(axis=1)[0]
+unsolved_board[y, x] = pred
+```
+
+The digit, `roi`, is resized to 28x28 pixels -- the size of the images used in the MNIST dataset. This dataset contains 60,000 handwritten digits that will be used to train the deep learning model for optical character recognition. The `roi` digit is pre-processed before the `predict()` function is called on the `model` to predict the digit. The sudoku board is then updated with this prediction, thus replacing the default value of `0`.
+
+The current row of the board is then appended to `cell_locs` list and this process continues until all the rows of the sudoku board have been worked on. 
+
+The following section briefly explains the process involved in building the model, used by the `classify_digit()` function for OCR.
+
+
+### OCR Model
 
 Lorem ipsum
 
@@ -224,15 +336,55 @@ Lorem ipsum
 <!-- Explain one hot encoding -->
 <!-- necessary to talk about? model.metrics_names -->
 
-### Step 5
+<!-- The model is provided but you can train your own -->
 
-Lorem ipsum
+<!-- You can train the model if the container if you want to. Navigate to the model_files folder and run the notebook there, make sure to change the name of the model to be saved at the end. -->
+
+
+### Solve Sudoku puzzle
+
+<!-- Backtracking and recursion
+
+Flow chart to explain the process
+
+Pytest -->
 
 <!-- Try to keep this as small as possible as the main solver is well commented. Consider using a flow chart to show the solver process -->
 
-### Step 6
+### Display puzzle solutions
+```
+def display_solutions(cell_locs, color_puzzle):
+    """
+    This function displays the solutions of the sudoku puzzle on the color puzzle image.
+    """
+    
+    global board, unsolved_board
+    
+    # Loop over the cell locations and boards
+    for (cell_row, unsolved_board_row, solved_board_row) in zip(cell_locs, 
+        unsolved_board, solved_board):
+        
+        # Loop over individual cells in the row
+        for (box, unsolved_digit, solved_digit) in zip(cell_row, 
+            unsolved_board_row, solved_board_row):
+            if unsolved_digit == 0:
+                # Unpack the cell coordinates
+                start_x, start_y, end_x, end_y = box
 
-Lorem ipsum
+                # Compute the coordinates of where the digit will be drawn 
+                # on the output puzzle image
+                text_x = int((end_x - start_x) * 0.33)
+                text_y = int((end_y - start_y) * -0.2)
+                text_x += start_x
+                text_y += end_y
+
+                # Draw the digit on the sudoku puzzle image
+                cv2.putText(
+                    color_puzzle, str(solved_digit), (text_x, text_y), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 255), 2)
+    
+    display_img(color_puzzle, 'Solved Puzzle')
+```
 
 <p align='center'>
     <img src='images/solved_puzzle.jpg' width=400>
@@ -241,17 +393,32 @@ Lorem ipsum
 <!-- Need to circle back to introduce the main cell of the notebook, or do that here? -->
 ## Docker Image Build
 
-Lorem ipsum
+The main Jupyter notebook and relevant files needed for this project can be run in a Docker container. 
 
-<!-- ```
+First pull the image:
+
+```
 docker pull thenoobinventor/sudoku-ai-solver:latest
-``` -->
+```
 
-<!-- Running pytest in docker container -->
+Then run a container based on the image:
+
+```
+docker run -it --rm -p 8890:8890 --name container_name sudoku-ai-solver
+```
+
+<!-- If you want to build an image from the Dockerfile instead:
+docker build --load -t name:tag
+
+List of packages that are installed are in the requirements.txt file -->
+
+<!-- Running pytest in docker container, casual comment and relate it to the one we discussed before -->
 
 <!-- Settings and go into dark mode -->
 
 <!-- walkthrough of how to run the container -->
+
+<!-- Add screenshots  -->
 
 <!-- How you can train your own model and the issues with image quality etc -->
 

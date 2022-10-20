@@ -7,7 +7,7 @@
 
 ## Docker container
 
-The main Jupyter notebook and relevant files needed for this project can be run in a Docker container. 
+The main Jupyter notebook, `sudoku_puzzle_extractor.ipynb`, and relevant files needed for this project can be run in a Docker container. 
 
 First pull the image:
 
