@@ -556,47 +556,13 @@ Pytest -->
 
 ### Display puzzle solutions
 
-<!-- Don't think there's much to say about this part. Just maybe say that we filled out the spaces in the puzzle with the solution and mention the functin used to display the solutions. -->
-<!-- 
-```
-def display_solutions(cell_locs, color_puzzle):
-    """
-    This function displays the solutions of the sudoku puzzle on the color puzzle image.
-    """
-    
-    global board, unsolved_board
-    
-    # Loop over the cell locations and boards
-    for (cell_row, unsolved_board_row, solved_board_row) in zip(cell_locs, 
-        unsolved_board, solved_board):
-        
-        # Loop over individual cells in the row
-        for (box, unsolved_digit, solved_digit) in zip(cell_row, 
-            unsolved_board_row, solved_board_row):
-            if unsolved_digit == 0:
-                # Unpack the cell coordinates
-                start_x, start_y, end_x, end_y = box
 
-                # Compute the coordinates of where the digit will be drawn 
-                # on the output puzzle image
-                text_x = int((end_x - start_x) * 0.33)
-                text_y = int((end_y - start_y) * -0.2)
-                text_x += start_x
-                text_y += end_y
-
-                # Draw the digit on the sudoku puzzle image
-                cv2.putText(
-                    color_puzzle, str(solved_digit), (text_x, text_y), 
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 255), 2)
-    
-    display_img(color_puzzle, 'Solved Puzzle')
-``` -->
 
 <p align='center'>
     <img src='images/solved_puzzle.jpg' width=400>
 </p>
 
-<!-- Need to circle back to introduce the main cell of the notebook, or do that here? -->
+
 ## Docker Image Build
 
 The main Jupyter notebook and relevant files needed for this project can be run in a Docker container. 

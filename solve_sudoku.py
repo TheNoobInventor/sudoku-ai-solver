@@ -43,7 +43,6 @@ def solve_puzzle(puzzle, debug=False):
     # is declared unsolvable.
     return False
 
-
 def is_puzzle_valid(puzzle):
     """
     This method confirms that the puzzle passed in is valid: the puzzle is a list of list, each row is a list, all elements in the 
