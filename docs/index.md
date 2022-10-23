@@ -1,6 +1,6 @@
 # Sudoku AI Solver
 
-In this project, a Sudoku Artificial Intelligence (AI) puzzle solver is built using python, OpenCV, Deep Learning (DL) and OCR (Optical Character Recognition) methods to solve puzzles obtained from images. The steps required to implement the solver will be outlined after a brief overview of Sudoku puzzles.
+In this project, a Sudoku Artificial Intelligence (AI) puzzle solver is built using python, OpenCV, Deep Learning and Optical Character Recognition (OCR) methods to solve puzzles obtained from images. The steps required to implement the solver will be outlined after a brief overview of Sudoku puzzles.
 
 (Work in progress)
 
@@ -320,26 +320,229 @@ pred = model.predict(roi, verbose=0).argmax(axis=1)[0]
 unsolved_board[y, x] = pred
 ```
 
-The digit, `roi`, is resized to 28x28 pixels -- the size of the images used in the MNIST dataset. This dataset contains 60,000 handwritten digits that will be used to train the deep learning model for optical character recognition. The `roi` digit is pre-processed before the `predict()` function is called on the `model` to predict the digit. The sudoku board is then updated with this prediction, thus replacing the default value of `0`.
+The digit, `roi`, is resized to 28x28 pixels -- the size of the images in the MNIST dataset used to train a deep learning model for optical character recognition. The `roi` digit is pre-processed before the `predict()` function is called on the `model` to predict the digit. The sudoku board is then updated with this prediction, thus replacing the default value of 0.
 
 The current row of the board is then appended to `cell_locs` list and this process continues until all the rows of the sudoku board have been worked on. 
 
-The following section briefly explains the process involved in building the model, used by the `classify_digit()` function for OCR.
+The following section briefly explains the process involved in building the deep learning model, used by the `classify_digit()` function for OCR.
 
 
-### OCR Model
+### Deep Learning model for Optical Character Recognition (OCR)
 
-Lorem ipsum
+Deep learning is a subset of Machine Learning (itself a subset of Artificial Intelligence) techniques that use artificial neural network architectures to learn from data. [Neural networks](https://www.ibm.com/cloud/learn/deep-learning) are layers of nodes, similar to the neurons in the human brain, that attempt to simulate the brain's ability to learn from large amounts of data and make predictions. The nodes within individual layers are connected to [adjacent layers](https://www.simplilearn.com/tutorials/deep-learning-tutorial/what-is-deep-learning). The network is said to be 'deep' depending on the number of hidden layers it has. Traditional [neural networks](https://www.mathworks.com/discovery/deep-learning.html) only contain 2-3 hidden layers, while deep networks can have as many as 150. 
 
-<!-- 60,000 28x28 images mnist dataset -->
+The [figure](https://www.mathworks.com/discovery/deep-learning.html) below shows the layout of a typical neural network. 
 
-<!-- Explain one hot encoding -->
-<!-- necessary to talk about? model.metrics_names -->
+<p align='center'>
+    <img src='images/neural_network.jpg' width=600>
+</p>
 
-<!-- The model is provided but you can train your own -->
+Deep learning models are trained using a large set of labeled data and neural network architectures that learn features directly from the data without the need for manual feature extraction. Convolutional neural network (CNN or ConvNet) is one of the most popular types of deep neural networks. A CNN convolves learned features with input data, and uses 2D convolutional layers, making this architecture well suited to processing 2D data, such as images.
 
-<!-- You can train the model if the container if you want to. Navigate to the model_files folder and run the notebook there, make sure to change the name of the model to be saved at the end. -->
+The CNN works by extracting features directly from images. The relevant features are not pretrained; they are learned while the network trains on a collection of images. This automated feature extraction makes deep learning models highly accurate for computer vision tasks such as object classification. The [figure](https://towardsdatascience.com/a-comprehensive-guide-to-convolutional-neural-networks-the-eli5-way-3bd2b1164a53) below illustrates the CNN process for classifying handwritten digits. 
 
+<p align='center'>
+    <img src='images/convnet.jpeg' width=600>
+</p>
+
+More information about convolutional neural networks can be found [here](https://towardsdatascience.com/a-comprehensive-guide-to-convolutional-neural-networks-the-eli5-way-3bd2b1164a53) and [here](https://www.simplilearn.com/tutorials/deep-learning-tutorial/convolutional-neural-network). 
+
+To perform optical character recognition on the digits obtained from the `extract_digit()`, a convolutional neural model is built and trained using the [MNIST dataset](http://yann.lecun.com/exdb/mnist/). The MNIST dataset is a classic dataset that contains 28x28 pixels sized images of handwritten digits, with 60,000 training images and 10,000 test images. The handwritten images are grayscale single digits from 0 to 9. A sample of these images is shown [below](https://en.wikipedia.org/wiki/MNIST_database).
+
+<p align='center'>
+    <img src='images/MnistExamples.png' width=500>
+</p>
+
+The MNIST dataset is part of the Keras deep learning library so it only needs to be loaded to the `train_digit_classifier.ipynb` notebook, in the `model_files` directory, used to build and train the OCR deep learning model.
+
+To build the deep learning model, the following packages need to be imported into the `train_digit_classifier.ipynb` notebook:
+
+```
+import numpy as np
+import matplotlib.pyplot as plt
+from keras.datasets import mnist
+from keras.utils.np_utils import to_categorical
+from keras.models import Sequential
+from keras.layers import Dense, Conv2D, MaxPool2D, Flatten, Dropout, Activation
+from sklearn.metrics import classification_report
+```
+
+Next, the MNIST dataset is loaded and split into training and test data and labels.
+
+```
+(train_data, train_labels), (test_data, test_labels) = mnist.load_data()
+```
+
+After loading the dataset, the data needs to be preprocessed before using it to build the model. One process is to one hot encode the test and train data labels. The original labels of the images are given as a list of numbers: `[4,5,7,...,0,9,1]`. These need to be converted to one-hot encoding.
+
+In one-hot encoding, the label of an image is based off the index position in the label array. For instance, a drawn digit of 4 would have the label array:
+
+-`[0, 0, 0, 0, 1, 0, 0, 0, 0, 0]`
+
+Or the integer 9 would be encoded as:
+
+-`[0, 0, 0, 0, 0, 0, 0, 0, 0, 1]`
+
+Without one-hot encoding, the neural network might think there are could be values between 
+numbers in a list instead of distinct categories or labels. One-hot encoding is easily done in Keras with the utility function, `to_categorical()` which accepts data and the number of classes (0 - 9) as arguments. 
+
+```
+test_labels = to_categorical(test_labels, 10)
+train_labels = to_categorical(train_labels, 10)
+```
+
+The next preprocess step is to normalize the test and train data to range [0, 1].
+
+```
+train_data = train_data / 255
+test_data = test_data / 255
+```
+
+The final step before building is the model is to reshape the test and train data to include color channels. Only one channel is included here for grayscale.
+
+```
+train_data = train_data.reshape(train_data.shape[0], 28, 28, 1)
+test_data = test_data.reshape(test_data.shape[0], 28, 28, 1)
+```
+
+With the data preprocessed, it is time to build and train the model. The paramters used to build the following CNN model were obtained from [here](https://becominghuman.ai/part-3-solving-the-sudoku-ai-solver-13f64a090922).
+
+```
+# Create model
+model = Sequential()
+
+# First set of Convolution layer
+model.add(Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_uniform', 
+input_shape=(28, 28, 1)))
+
+# Pooling layer
+model.add(MaxPool2D((2, 2)))
+
+# Second set of Convolution layer
+model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform'))
+
+# Third set of Convolution layer
+model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform'))
+
+# Pooling layer
+model.add(MaxPool2D((2, 2)))
+
+# Flat layer: 2 Dimension --> 1 Dimension
+model.add(Flatten())
+model.add(Dense(100, activation='relu', kernel_initializer='he_uniform'))
+
+# Output layer/classifer
+model.add(Dense(10, activation='softmax'))
+
+# Compile model
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+```
+
+The summary of the built model is shown below.
+
+```
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ conv2d (Conv2D)             (None, 26, 26, 32)        320       
+                                                                 
+ max_pooling2d (MaxPooling2D  (None, 13, 13, 32)       0         
+ )                                                               
+                                                                 
+ conv2d_1 (Conv2D)           (None, 11, 11, 64)        18496     
+                                                                 
+ conv2d_2 (Conv2D)           (None, 9, 9, 64)          36928     
+                                                                 
+ max_pooling2d_1 (MaxPooling  (None, 4, 4, 64)         0         
+ 2D)                                                             
+                                                                 
+ flatten (Flatten)           (None, 1024)              0         
+                                                                 
+ dense (Dense)               (None, 100)               102500    
+                                                                 
+ dense_1 (Dense)             (None, 10)                1010      
+                                                                 
+=================================================================
+Total params: 159,254
+Trainable params: 159,254
+Non-trainable params: 0
+```
+
+Now it is time to train the model. An epoch is the number of times the network goes through the training set. 
+
+```
+model.fit(train_data, train_labels, epochs=20)
+```
+
+The following is an excerpt of the model training output.
+
+```
+Epoch 1/20
+1875/1875 [==============================] - 34s 18ms/step - loss: 0.1174 - accuracy: 0.9637
+Epoch 2/20
+1875/1875 [==============================] - 34s 18ms/step - loss: 0.0414 - accuracy: 0.9876
+Epoch 3/20
+1875/1875 [==============================] - 35s 19ms/step - loss: 0.0300 - accuracy: 0.9907
+Epoch 4/20
+1875/1875 [==============================] - 35s 19ms/step - loss: 0.0208 - accuracy: 0.9934
+Epoch 5/20
+1875/1875 [==============================] - 34s 18ms/step - loss: 0.0164 - accuracy: 0.9949
+Epoch 6/20
+1625/1875 [=========================>....] - ETA: 4s - loss: 0.0116 - accuracy: 0.9965
+---
+Epoch 17/20
+1875/1875 [==============================] - 33s 17ms/step - loss: 0.0051 - accuracy: 0.9983
+Epoch 18/20
+1875/1875 [==============================] - 33s 17ms/step - loss: 0.0048 - accuracy: 0.9984
+Epoch 19/20
+1875/1875 [==============================] - 33s 17ms/step - loss: 0.0050 - accuracy: 0.9986
+Epoch 20/20
+1875/1875 [==============================] - 33s 18ms/step - loss: 0.0049 - accuracy: 0.9987
+```
+
+The next action to be carried is to predict classes on the test images the model is yet to see.
+
+```
+predictions = model.predict(test_data)
+```
+
+The correct answers, `test_labels`, are compared with the generated predictions using the `classification_report()` function from the `sklearn.metrics` package.
+
+```
+print(classification_report(test_labels.argmax(axis=1), predictions.argmax(axis=1)))
+```
+
+The report output is shown below and it can be observed that the accuracy, precision, recall and f1-score are all 99%.
+
+```
+              precision    recall  f1-score   support
+
+           0       0.99      0.99      0.99       980
+           1       1.00      0.99      1.00      1135
+           2       0.98      1.00      0.99      1032
+           3       1.00      0.99      0.99      1010
+           4       0.99      0.99      0.99       982
+           5       0.98      0.99      0.99       892
+           6       0.99      0.99      0.99       958
+           7       0.99      0.99      0.99      1028
+           8       1.00      0.98      0.99       974
+           9       0.99      0.98      0.98      1009
+
+    accuracy                           0.99     10000
+   macro avg       0.99      0.99      0.99     10000
+weighted avg       0.99      0.99      0.99     10000
+```
+
+The trained model can be saved by running the following command in the notebook.
+
+```
+model.save('model_name.h5')
+```
+
+This project already has a trained model, `digit_classifier_model.h5` , present in the `model_files` directory, used to OCR the extracted digit. 
+
+At this stage of the sudoku AI solver, the trained model has classified the extracted digits from the previous and substituted them in the respective cells of `unsolved_board`. The next step is to use the `solve_sudoku.py` Python script to solve the `unsolved_board` sudoku puzzle.
 
 ### Solve Sudoku puzzle
 
@@ -352,6 +555,9 @@ Pytest -->
 <!-- Try to keep this as small as possible as the main solver is well commented. Consider using a flow chart to show the solver process -->
 
 ### Display puzzle solutions
+
+<!-- Don't think there's much to say about this part. Just maybe say that we filled out the spaces in the puzzle with the solution and mention the functin used to display the solutions. -->
+<!-- 
 ```
 def display_solutions(cell_locs, color_puzzle):
     """
@@ -384,7 +590,7 @@ def display_solutions(cell_locs, color_puzzle):
                     cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 255), 2)
     
     display_img(color_puzzle, 'Solved Puzzle')
-```
+``` -->
 
 <p align='center'>
     <img src='images/solved_puzzle.jpg' width=400>
@@ -448,6 +654,18 @@ Lorem ipsum
 - [OpenCV Docs](https://docs.opencv.org/4.x/d1/dfb/intro.html)
  
 - [Understanding OpenCV getperspective transform](https://theailearner.com/tag/cv2-getperspectivetransform/)
+  
+- [Deep Learning](https://www.ibm.com/cloud/learn/deep-learning)
+  
+- [What is Deep Learning?](https://www.mathworks.com/discovery/deep-learning.html)
+
+- [A Comprehensive Guide to Convolutional Neural Networks](https://towardsdatascience.com/a-comprehensive-guide-to-convolutional-neural-networks-the-eli5-way-3bd2b1164a53)
+
+- [Convolutional Neural Network Tutorial](https://www.simplilearn.com/tutorials/deep-learning-tutorial/convolutional-neural-network)
+
+- [Convolutional Neural Networks](https://www.ibm.com/cloud/learn/convolutional-neural-networks)
+
+- [Python for Computer Vision with OpenCV and Deep Learning](https://www.udemy.com/course/python-for-computer-vision-with-opencv-and-deep-learning/)
 
 - [Dockerfile setup reference](https://github.com/elehcimd/jupyter-opencv)
  
