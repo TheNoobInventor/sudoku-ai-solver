@@ -9,16 +9,15 @@
 
 The main Jupyter notebook, `sudoku_puzzle_extractor.ipynb`, and relevant files needed for this project can be run in a Docker container. 
 
-First pull the image:
-
+First pull the image (with a compressed size of 1.93 GB) from the Docker Hub repository:
 ```
 docker pull thenoobinventor/sudoku-ai-solver:latest
 ```
 
-Then run a container based on the image:
+Then run a container (choose a name for it) based on the image:
 
 ```
-docker run -it --rm -p 8890:8890 --name container_name sudoku-ai-solver
+docker run -it --rm -p 8890:8890 --name container_name thenoobinventor/sudoku-ai-solver:latest
 ```
 
 The documentation for this project can be found [here](https://TheNoobInventor.github.io/sudoku-ai-solver/).

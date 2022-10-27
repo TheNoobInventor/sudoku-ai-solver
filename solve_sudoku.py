@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 
-# This script contains methods used to solve a sudoku puzzle.
+# This script contains function used to solve a sudoku puzzle.
 
 def solve_puzzle(puzzle, debug=False):
     """
-    This method attempts to solve the passed in sudoku puzzle using backtracking. It returns the solved puzzle
+    This function attempts to solve the passed in sudoku puzzle using backtracking. It returns the solved puzzle
     if it is solved and False if there is no solution.
     """
 
@@ -17,7 +17,7 @@ def solve_puzzle(puzzle, debug=False):
     row, col = find_next_empty(puzzle)
 
     # If find_next_empty() returns None, None that means there is no free space/element left in the
-    # puzzle. Since only valid guesses are filled in (using is_guess_valid() method), the puzzle has been solved.
+    # puzzle. Since only valid guesses are filled in (using is_guess_valid() function), the puzzle has been solved.
     if row is None:
         return puzzle
 
@@ -30,7 +30,7 @@ def solve_puzzle(puzzle, debug=False):
             # Place valid guess in the current empty space of the puzzle
             puzzle[row][col] = guess
 
-            # Recursively call the solve_puzzle() method. Returning True means that the puzzle is solved, 
+            # Recursively call the solve_puzzle() function. Returning True means that the puzzle is solved, 
             # from row/column having a value of None.
             if solve_puzzle(puzzle):
                 return puzzle
@@ -45,7 +45,7 @@ def solve_puzzle(puzzle, debug=False):
 
 def is_puzzle_valid(puzzle):
     """
-    This method confirms that the puzzle passed in is valid: the puzzle is a list of list, each row is a list, all elements in the 
+    This function confirms that the puzzle passed in is valid: the puzzle is a list of list, each row is a list, all elements in the 
     puzzle are integers, and there are no duplicate numbers in a row, column or a 3x3 block before an attempt is made to solve it.
     
     Return True if all the checks passed.
@@ -84,7 +84,6 @@ def is_puzzle_valid(puzzle):
                 col_start = (c // 3) * 3 # Get starting column index for the 3x3 block to search in
 
                 for i in range(row_start, row_start+3):
-                    # block_vals = [block_vals.append(puzzle[i][j]) for j in range(col_start, col_start+3)]
                     for j in range(col_start, col_start+3):
                         block_vals.append(puzzle[i][j])
 
@@ -96,7 +95,7 @@ def is_puzzle_valid(puzzle):
 
 def duplicate_check(list_of_values):
     """
-    This method checks for any duplicate numbers in a list.
+    This function checks for any duplicate numbers in a list.
     """
 
     for i in range(9):
@@ -113,7 +112,7 @@ def duplicate_check(list_of_values):
 
 def find_next_empty(puzzle):
     """
-    This methods returns a tuple of the location of the next empty space/cell in the puzzle. If there are no
+    This function returns a tuple of the location of the next empty space/cell in the puzzle. If there are no
     more empty spaces, it returns a tuple of (None, None).
     """
     
@@ -126,7 +125,7 @@ def find_next_empty(puzzle):
 
 def is_guess_valid(puzzle, guess, row, col):
     """
-    This method checks if a particular guess is valid by checking if the guessed number already appears
+    This function checks if a particular guess is valid by checking if the guessed number already appears
     somewhere in the same row, column or 3x3 block associated with it. 
     
     Returns True if the guess is valid and False if it is not.
