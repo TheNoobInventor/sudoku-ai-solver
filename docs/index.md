@@ -2,8 +2,6 @@
 
 In this project, a Sudoku Artificial Intelligence (AI) puzzle solver is built using python, OpenCV, Deep Learning and Optical Character Recognition (OCR) methods to solve puzzles obtained from images. The steps required to implement the solver will be outlined after a brief overview of Sudoku puzzles.
 
-(Work in progress)
-
 ## Sudoku
 Sudoku is logic-based puzzle where the objective is to fill up a 9 x 9 grid with numbers from 1-9 in each row, each column and each mini 3 x 3 grid/block in a way that no number appears more than once in a row, column or mini grid. Each puzzle contains prefilled numbers with the empty cells/spaces to filled in with the Sudoku rules in mind. An example of a typical sudoku [puzzle](https://www.gmpuzzles.com/blog/category/sudoku/classic-sudoku/page/3/) is shown below.
 
@@ -42,7 +40,7 @@ pip install numpy matplotlib imutils jupyter jupyterlab scikit-image tensorflow 
 
 Keras is automatically installed with Tensorflow. OpenCV is installed separately and can be downloaded [here](https://docs.opencv.org/4.x/da/df6/tutorial_py_table_of_contents_setup.html) with options for Windows, Fedora and Ubuntu operating systems -- Ubuntu 20.04 is used for this project.
 
-The `sudoku_puzzle_extractor.ipynb` Jupyter notebook in this repository is the main file used to build the sudoku AI solver. The file was based on the steps used in this [Pyimagesearch article](https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/) with modifications to the functions in the Jupyter notebook, the OCR model, the script that solves the extracted puzzle and more. 
+The `sudoku_puzzle_extractor.ipynb` Jupyter notebook in this repository is the main file used to build the sudoku AI solver which runs in JupyterLab. The file was based on the steps used in this [Pyimagesearch article](https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/) with modifications to the functions in the Jupyter notebook, the OCR model, the script that solves the extracted puzzle and more. 
 
 A Docker container, based on a custom image built on Ubuntu 20.04, which mirrors the project repository with all the necessary packages, libraries and frameworks, can also be used to run the main Jupyter notebook to solve image extracted sudoku puzzles. The Docker build is detailed in a subsequent subsection.
 
@@ -672,6 +670,8 @@ The following command runs the unit tests using Pytest:
 pytest test_solve_sudoku.py
 ```
 
+This command can also be run in the Docker container (to be discussed in a subsequent subsection) of this project.
+
 ### Display puzzle solutions
 
 Assuming that there are no errors encountered when attempting to solve the sudoku puzzle, the solved puzzle is returned to the `solved_board` variable and the solutions are displayed on the extracted color puzzle image using the function, `display_solutions(cell_locs, color_puzzle)`. This is expressed in the following lines from the main Jupyter notebook:
@@ -745,16 +745,16 @@ docker build --load -t name:tag .
 
 ## Project Demonstration
 
-The video below walks through running the sudoku AI solver in a Docker container.
+The video below walks through running the Jupyter notebook sudoku AI solver in a Docker container.
 
-[<img src="images/thumbnail.png" width="50%">](YOUTUBELINK)
+[<img src="images/thumbnail.png" width="50%">](https://youtu.be/_Kjz8v-J1Os)
 
 
 ## Observations
 
 The main observation while working on this project involved the deep learning model used for classifying the digits. It took several iterations of model parameters to obtain a model that successfully extracts and classifies the digits of the sudoku images used in this project. Despite this, the model had some issues correctly identifying all the digits of other puzzle images. The quality of the images used and the model parameters are the main factors to not achieving the desired classifications and that should be considered when using the model on other puzzle images. Therefore, further adjustments to some of the model parameters -- number of epochs, number of layers, number of filters, kernel size, pool size -- should be made to correctly train the model.
 
-## Future work/suggestions
+## Recommendations
 
 A suggestion to improve on this project is to add functionality to use a webcam to overlay the puzzle solutions in a video stream of the puzzle. 
 
