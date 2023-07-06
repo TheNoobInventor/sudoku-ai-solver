@@ -49,8 +49,6 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
 # Create working directory
-RUN cd /home/sudoku/
-RUN mkdir /sudoku-ai-solver
 WORKDIR /sudoku-ai-solver
 
 # Copy chosen files from the repository into the working directory
